@@ -16,7 +16,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.rp",
-				"match": "\\b(package|import|readable|writeable|final|callable|bool|byte|char|int2|int4|int8|float4|float8|string|enum|class|deed|any|if|else|switch|do|while|for|break|try|catch|return)\\b"
+				"match": "\\b(package|import|readable|writeable|callable|const|bool|byte|char|int2|int4|int8|float4|float8|string|enum|class|deed|this|super|null|any|if|else|switch|do|while|for|break|throw|throws|try|catch|finally|return)\\b"
 			}]
 		},
 		"strings": {

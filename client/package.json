@@ -1,7 +1,7 @@
 {
 	"name": "rap-client",
 	"description": "VSCode part of a language server",
-	"author": "Microsoft Corporation",
+	"author": "Xian",
 	"license": "MIT",
 	"version": "0.0.1",
 	"publisher": "vscode",

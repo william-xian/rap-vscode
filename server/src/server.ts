@@ -196,16 +196,23 @@ connection.onCompletion(
 		// The pass parameter contains the position of the text document in
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
+		let doc = _textDocumentPosition;
+		let lbl = doc.position.line;
 		return [
 			{
-				label: 'TypeScript',
-				kind: CompletionItemKind.Text,
+				label: '.dot' +lbl,
+				kind: CompletionItemKind.Field,
 				data: 1
 			},
 			{
-				label: 'JavaScript',
-				kind: CompletionItemKind.Text,
+				label: ':colon',
+				kind: CompletionItemKind.Function,
 				data: 2
+			},
+			{
+				label: ',comma',
+				kind: CompletionItemKind.TypeParameter,
+				data: 3
 			}
 		];
 	}
@@ -216,11 +223,14 @@ connection.onCompletion(
 connection.onCompletionResolve(
 	(item: CompletionItem): CompletionItem => {
 		if (item.data === 1) {
-			item.detail = 'TypeScript details';
-			item.documentation = 'TypeScript documentation';
+			item.detail = 'dotTODO details';
+			item.documentation = 'dotTODO documentation';
 		} else if (item.data === 2) {
-			item.detail = 'JavaScript details';
-			item.documentation = 'JavaScript documentation';
+			item.detail = 'colonTODO details';
+			item.documentation = 'colonTODO documentation';
+		} else if (item.data === 3) {
+			item.detail = 'commaTODO details';
+			item.documentation = 'commaTODO documentation';
 		}
 		return item;
 	}

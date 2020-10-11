@@ -2,7 +2,7 @@
 	"name": "rap-server",
 	"description": "Example implementation of a language server in node.",
 	"version": "1.0.0",
-	"author": "Microsoft Corporation",
+	"author": "Xian",
 	"license": "MIT",
 	"engines": {
 		"node": "*"
