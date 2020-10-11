@@ -1,0 +1,46 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "rp",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comment"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.rp",
+				"match": "\\b(package|import|readable|writeable|final|callable|bool|byte|char|int2|int4|int8|float4|float8|string|enum|class|deed|any|if|else|switch|do|while|for|break|try|catch|return)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.rp",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.rp",
+					"match": "\\\\."
+				}
+			]
+		},
+		"comment": {
+			"name": "comment.quoted.double.rp",
+			"begin": "/\\*",
+			"end": "\\*/",
+			"patterns": [
+				{
+					"name": "constant.character.escape.rp",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.rap"
+}
