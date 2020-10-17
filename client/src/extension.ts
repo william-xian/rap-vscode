@@ -38,7 +38,7 @@ export function activate(context: ExtensionContext) {
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
 		// Register the server for plain rp documents
-		documentSelector: [{ scheme: 'file', language: 'rp' }],
+		documentSelector: [{ scheme: 'file', language: 'rap' }],
 		synchronize: {
 			// Notify the server about file changes to '.clientrc files contained in the workspace
 			fileEvents: workspace.createFileSystemWatcher('**/.raprc')

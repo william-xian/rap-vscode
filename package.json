@@ -22,15 +22,15 @@
 	"main": "./client/out/extension",
 	"contributes": {
         "languages": [{
-            "id": "rp",
-            "aliases": ["rp", "rp"],
-            "extensions": [".rp"],
+            "id": "rap",
+            "aliases": ["rap", "rap"],
+            "extensions": [".rap"],
             "configuration": "./language-configuration.json"
         }],
         "grammars": [{
-            "language": "rp",
+            "language": "rap",
             "scopeName": "source.rap",
-            "path": "./syntaxes/rp.tmLanguage.json"
+            "path": "./syntaxes/rap.tmLanguage.json"
         }],
 		"configuration": {
 			"type": "object",

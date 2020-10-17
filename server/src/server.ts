@@ -65,7 +65,7 @@ connection.onInitialize((params: InitializeParams) => {
 			}
 		};
 	}
-
+	connection.window.showInformationMessage("onInitialize:"+JSON.stringify(params.workspaceFolders));
 	return result;
 });
 
