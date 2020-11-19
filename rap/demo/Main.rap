@@ -1,0 +1,48 @@
+package demo;
+
+import rap.core{Heap,Meta};
+import rap.c.std{Output,Time};
+
+export class Main {
+	/* 函数入口 */
+    callable main(args:string[]) {
+		/* 定义一个人 */
+        v:Viewer = Person:new();
+		/* 输出*/
+        Output:printf("%s",v);
+    }
+}
+
+class Person<T:int2,int4;R:string>:Viewer {
+    static const MALE:int2  = 1;
+    static const FEMALE:int2  = 2;
+    static const MALE_NAME = "name";
+    readable name:R;
+    writeable brithday:T;
+    callable age():T throws Exception {
+        if(brithday == null) {
+            throw Exception:new("brithday is \"null\".");
+        }
+        return Time:now() - brithday;
+    };
+    callable new():Person {
+        return this;
+    };
+    callable toString():string {
+        r:string;
+        try {
+            r = string:format("I am %s, I'm %d years old.", name, age());
+        } catch(e:Exception) {
+            r = string:format("I am %s.", name);
+        } finally {
+        }
+        return r;
+    }
+}
+/*
+ * viewer 打印时可以调用toString字符串 
+ */
+export deed Viewer {
+   toString():string;
+}
+/** END */
