@@ -164,7 +164,7 @@ uchar *rap_vslprintf(uchar *buf, uchar *last, const char *fmt, va_list args)
     size_t                 len, slen;
     int64_t                i64;
     uint64_t               ui64, frac;
-    uint4             width, sign, hex, max_width, frac_width, scale, n;
+    uint4             width, sign, hex, frac_width, scale, n;
     rap_str_t             *v;
     rap_variable_value_t  *vv;
     rap_msec_t ms;
@@ -185,7 +185,6 @@ uchar *rap_vslprintf(uchar *buf, uchar *last, const char *fmt, va_list args)
             width = 0;
             sign = 1;
             hex = 0;
-            max_width = 0;
             frac_width = 0;
             slen = (size_t) -1;
 
@@ -203,7 +202,6 @@ uchar *rap_vslprintf(uchar *buf, uchar *last, const char *fmt, va_list args)
                     continue;
 
                 case 'm':
-                    max_width = 1;
                     fmt++;
                     continue;
 

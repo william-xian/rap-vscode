@@ -48,5 +48,4 @@ rap_array_init(rap_array_t *array, rap_pool_t *pool, uint4 n, size_t size)
     return RAP_OK;
 }
 
-
 #endif /* _RAP_ARRAY_H_INCLUDED_ */
