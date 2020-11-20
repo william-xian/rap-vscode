@@ -6,7 +6,9 @@
 
 #define VECTOR_SIZE 3 * 100
 #define PATTERN_SIZE 20
+#define  MSG_MAX_LEN 1024
 
+char msg[MSG_MAX_LEN];
 
 rap_pool_t *POOL;
 
@@ -35,27 +37,35 @@ def_a_(range_t)
 typedef struct
 {
 	short class_no;
-	range_t content;
+	int access;
 	range_t name;
+	range_t type;
+	range_t val;
 } field_t;
 
 typedef struct
 {
 	short class_no;
+	int access;
 	range_t content;
 	range_t name;
-	a_range_t args;
-	a_range_t returns;
-	a_range_t expresses;
+	rap_array_t *args;
+	rap_array_t *returns;
+	rap_array_t *expresses;
 	/* data */
 } function_t;
 
 typedef struct
 {
-	range_t modifier;
-	range_t content;
-	range_t defGenericType;
-	range_t supers[16];
+	range_t declare;
+	range_t definition;
+	range_t annocations;
+	int modifier;
+	range_t name;
+	rap_array_t *typeParameters;
+	rap_array_t *supers;
+	rap_array_t *fields;
+	rap_array_t *functions;
 } class_t;
 
 typedef struct
@@ -64,14 +74,11 @@ typedef struct
 	ushort filesize;
 	char *data;
 	char *content;
-	ushort class_cnt;
 	range_t package;
 	a_range_t imports;
 	a_range_t comments;
 	a_range_t strings;
-	class_t classes[32];
-	field_t fields[128];
-	function_t functions[512];
+	rap_array_t classes;
 } source_t;
 
 typedef struct {
@@ -137,8 +144,10 @@ enum pattern_name
 	CONST_CHAR,
 	PACKAGE,
 	IMPORT,
+	CLASS_DEED,
 	BACKET,
-	COMMA
+	COMMA,
+	KEY_WORD
 };
 
 static char *patterns[PATTERN_SIZE] = {
@@ -147,8 +156,10 @@ static char *patterns[PATTERN_SIZE] = {
 	"'.*?'",
 	"package .*;",
 	"import .*;",
+	"\\b(class|deed)\\b",
 	"\\{(([^{}]*|(?R))*)\\}",
 	"\\((([^()]*|(?R))*)\\)",
+	"\\b(package|import|readable|writeable|callable|const|static|export|bool|byte|char|int2|int4|int8|float4|float8|string|enum|class|deed|this|super|null|any|if|else|switch|break|do|while|for|flow|goto|throw|throws|try|catch|finally|return)\\b",
 	NULL};
 
 static pcre *pcres[PATTERN_SIZE];
@@ -198,6 +209,24 @@ void source_replace_string(char *str, int len)
 		before = cur;
 	}
 }
+
+
+void source_set_range(char *str, int start, int end, char c)
+{
+	for (int i = start; i < end; i++)
+	{
+		str[i] = c;
+	}
+}
+
+int source_find_first_char_index(char *str, int start, int end)
+{
+	int i = start;
+	while ((str[i] <= 32) && i < end)
+		i++;
+	return i;
+}
+
 
 int source_parse(source_t *src)
 {
@@ -260,14 +289,36 @@ int source_parse(source_t *src)
 			break;
 		}
 	}
+	/** TODO check colsed */
 
 	start = 0;
-	while (start < src->filesize)
+	rc = pcre_exec(pcres[PACKAGE], NULL, src->content, src->filesize, start, 0, ovector, 3);
+	if (rc >= 0)
 	{
-		rc = pcre_exec(pcres[BACKET], NULL, src->content, src->filesize, start, 0, ovector, 3);
+		src->package.start = ovector[0];
+		src->package.end = ovector[1];
+		start = ovector[1];
+		source_set_range(src->content, ovector[0], ovector[1], ' ');
+		rc = pcre_exec(pcres[PACKAGE], NULL, src->content, src->filesize, start, 0, ovector, 3);
 		if (rc >= 0)
 		{
-			printRange(src->content, ovector[0], ovector[1]);
+			snprintf(msg, MSG_MAX_LEN, "包名最多一个,%d,%d\n", ovector[0], ovector[1]);
+			perror(msg);
+			return 1;
+		}
+	}
+
+	while (start < src->filesize)
+	{
+		rc = pcre_exec(pcres[IMPORT], NULL, src->content, src->filesize, start, 0, ovector, 3);
+		if (rc >= 0)
+		{
+
+			range_t *val = rap_array_push(&src->imports);
+			val->start = ovector[0];
+			val->end = ovector[1];
+
+			source_set_range(src->content, ovector[0], ovector[1], ' ');
 			start = ovector[1];
 		}
 		else
@@ -275,6 +326,37 @@ int source_parse(source_t *src)
 			break;
 		}
 	}
+
+	while (start < src->filesize)
+	{
+		rc = pcre_exec(pcres[CLASS_DEED], NULL, src->content, src->filesize, start, 0, ovector, 3);
+		if (rc >= 0)
+		{
+			rc = pcre_exec(pcres[BACKET], NULL, src->content, src->filesize, ovector[1], 0, ovector, 3);
+			if (rc >= 0)
+			{
+
+				class_t *val = rap_array_push(&src->imports);
+				val->declare.start = source_find_first_char_index(src->content, start, ovector[0]);
+				val->declare.end = ovector[0] - 1;
+				
+				val->definition.start = ovector[0];
+				val->definition.end = ovector[1];
+
+				source_set_range(src->content, start, ovector[1], ' ');
+				start = ovector[1];
+			}
+			else
+			{
+				break;
+			}
+		}
+		else
+		{
+			break;
+		}
+	}
+	return 0;
 	return 0;
 }
 
